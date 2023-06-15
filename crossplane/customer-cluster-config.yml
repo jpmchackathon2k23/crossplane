@@ -1,0 +1,42 @@
+apiVersion: eks.aws.crossplane.io/v1beta1
+kind: Cluster
+metadata:
+  name: customer-eks-cluster
+spec:
+  forProvider:
+    region: us-east-1
+    roleArn: arn:aws:iam::344832563714:role/eksClusterRole
+    resourcesVpcConfig:
+      subnetIds:
+        - subnet-0393ba0bb7dafe7b2
+        - subnet-09d26d834fc98557a
+        - subnet-0fcd1550554f00e3f
+  providerConfigRef:
+    name: crossplane-system
+#  writeConnectionSecretToRef:
+#    namespace: crossplane-system
+#    name: aws-secret
+
+---
+apiVersion: eks.aws.crossplane.io/v1alpha1
+kind: NodeGroup
+metadata:
+  name: customer-eks-ng
+spec:
+  forProvider:
+    clusterName: customer-eks-cluster
+    region: us-east-1
+    nodeRole: arn:aws:iam::344832563714:role/crossplane-mgmt-role
+    subnets:
+      - subnet-0393ba0bb7dafe7b2
+      - subnet-09d26d834fc98557a
+      - subnet-0fcd1550554f00e3f
+    scalingConfig:
+      minSize: 1
+      maxSize: 3
+      desiredSize: 2
+  providerConfigRef:
+    name: crossplane-system
+#  writeConnectionSecretToRef:
+#    name: example-eks-nodegroup-secret
+#    namespace: crossplane-system
