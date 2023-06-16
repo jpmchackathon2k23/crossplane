@@ -1,0 +1,17 @@
+apiVersion: database.aws.crossplane.io/v1beta1
+kind: RDSInstance
+metadata:
+  namespace: crossplane-system
+  name: customer-rdspostgresql
+spec:
+  forProvider:
+    region: us-east-1
+    dbInstanceClass: db.t2.small
+    masterUsername: masteruser
+    allocatedStorage: 20
+    engine: postgres
+    engineVersion: "11"
+    skipFinalSnapshotBeforeDeletion: true
+  providerConfigRef:
+    name: crossplane-system
+
